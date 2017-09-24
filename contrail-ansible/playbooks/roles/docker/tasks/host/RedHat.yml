@@ -1,0 +1,15 @@
+---
+- name: "Add contrail yum repo {{contrail_image_id}}"
+  yum_repository:
+    name: "{{contrail_image_id}}"
+    file: cobbler-config
+    description: "Contrail Package Repo"
+    baseurl: "{{contrail_yum_repo}}"
+    priority: 1
+    gpgcheck: no
+  when: contrail_image_id is defined and contrail_image_id != ""
+
+- name: install docker using package
+  yum:
+     name: "{{ docker_package_name }}"
+     state: latest
