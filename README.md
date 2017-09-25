@@ -155,21 +155,101 @@ This is the Central configuration file for various contrail related parameters. 
   global_config: { analytics_ip: 10.87.1.57, controller_ip: 10.87.1.57, config_ip: 10.87.1.57 }
   ```
   
-  *Choose the Protocol for WebUI (http/https)
-  
-  ```
-  webui_auth_protocol: http
-  ```
-
   *Provide the admin credentails and Keystone information
   
   ```
   keystone_config: {'ip': '50.51.23.14', 'admin_password': 'P0rterple1', 'admin_user': 'admin@cos.net', 'admin_port': '443',     'insecure': 'False', 'identity_uri': 'https://juniper.cos.net/keystone_admin', 'auth_url':               'https://juniper.cos.net:443/keystone/v2.0'}
   ```
-  
-  
+
+### Prepare vRouter/Compute Nodes
+
+Get the vRouter packages to all the compute nodes. Run the below snippet as a shell script adding it in a file (example: setup_vrouter.sh | execute: ./setup_vrouter.sh)
 
 
+```
+
+######
+#Get Contrail-vRouter packages
+######
+#Install kernel specific dependencies
+yum install glibc-devel wget git -y;
+######
+#Set Contrail Packages
+######
+mkdir -p /tmp/contrail-vrouter/repo;
+tar -xzf /root/contrail-vrouter-packages_4.0.1.0-32.tgz -C /tmp/contrail-vrouter/repo/;
+cd /tmp/contrail-vrouter/repo/contrail-vrouter-packages_4.0.1.0-32 && mv * /tmp/contrail-vrouter/repo/.;
+cd;
+######
+#Removing empty directory
+######
+rm -rf /tmp/contrail-vrouter/repo/contrail-vrouter-packages_4.0.1.0-32;
+######
+#Create a Repo
+######
+yum install createrepo -y;
+createrepo /tmp/contrail-vrouter/repo/;
+######
+#when using local repo in the target node
+######
+cat << __EOT__ > /etc/yum.repos.d/contrail-install.repo
+[contrail_install_repo]
+name=contrail_install_repo
+baseurl=file:///tmp/contrail-vrouter/repo/
+enabled=1
+priority=1
+gpgcheck=0
+__EOT__
+sleep 10;
+yum clean all;
+##
+sleep 5;
+yum install yum-plugin-priorities -y;
+######
+#Install contrail-utilities
+######
+sleep 5;
+yum install contrail-fabric-utils contrail-setup -y;
+######
+#Install contrail-vrouter
+######
+sleep 5;
+yum install contrail-vrouter-common contrail-vrouter contrail-vrouter-init -y;
+######
+
+```
+
+This will install all required packages on the Compute node required for vRouter installation.
 
 
+### Run Ansible
+
+Path:  Contrail_Ansible_TP_Integration/contrail-ansible/playbooks/
+
+```
+ansible-playbook  -i inventory/my-inventory site.yml -vv
+```
+
+### Custom Configuration Changes
+
+*Change parameters of vnc_api_lib.ini for contrail-alarm-gen service to be active. Once the installation is complete the contrail-alarm-gen service on the analytics containers will be in inactive state the following are the changes that are needed to activate the service.
+
+```
+[global]
+WEB_SERVER = 10.87.1.43
+WEB_PORT = 8082
+
+BASE_URL = /
+;BASE_URL = /tenants/infra ; common-prefix for all URLs
+
+; Authentication settings (optional)
+[auth]
+AUTHN_TYPE = keystone
+AUTHN_PROTOCOL = https
+AUTHN_SERVER = juniper.cosnet.net
+AUTHN_PORT = 443
+AUTHN_URL = /keystone/v2.0
+AUTHN_TOKEN_URL = https://juniper.cosnet.net/keystone/v2.0/tokens
+;AUTHN_TOKEN_URL = http://127.0.0.1:35357/v2.0/tokens
+```
 
