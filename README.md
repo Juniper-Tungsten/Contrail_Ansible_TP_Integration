@@ -255,7 +255,7 @@ This will install all required packages on the Compute node required for vRouter
 
 #### Provision and Register the vRouter to the Controller
 
-*Make sure to have proper hostname on the nodes, if using the name.domain_name then the out put of "hostname -s"should be same as the hostname.domain_name
+* Make sure to have proper hostname on the nodes, if using the name.domain_name then the out put of "hostname -s"should be same as the hostname.domain_name
 
 Use the below utility to provision the vRouter:
 
