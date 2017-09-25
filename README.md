@@ -125,6 +125,38 @@ This is the Ansible Hosts file which defines the nodes role and IP information.
 
 This is the Central configuration file for various contrail related parameters. The cloned repo already has a sample file, following are the parametes that are to be changed as required.
 
+  * Set the Compute Mode to Baremetal (default)
+  
+  ```
+  contrail_compute_mode: bare_metal
+  ```
+  
+  * Provide the OS release information of the Containers
+  
+  ```
+  os_release: ubuntu16.04
+  ```
+  
+  * Provide the Release information of Contrail. This should match the image_version tag
+  
+  ```
+  contrail_version: 4.0.1.0-32
+  ```
+  
+  * vRouter Physical interface. This is the interface that will be inherited by vRouter
+  
+  ```
+  vrouter_physical_interface: eth0
+  ```
+  
+  * Mention the LB IP as the Analytics, AnalyticsDB and Controller IP in global configuration
+  
+  ```
+  global_config: { analytics_ip: 10.87.1.57, controller_ip: 10.87.1.57, config_ip: 10.87.1.57 }
+  ```
+  
+  * 
+
 
 
 
