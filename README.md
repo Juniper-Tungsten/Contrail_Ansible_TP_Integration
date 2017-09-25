@@ -124,37 +124,37 @@ This is the Ansible Hosts file which defines the nodes role and IP information.
 
 This is the Central configuration file for various contrail related parameters. The cloned repo already has a sample file, following are the parametes that are to be changed as required.
 
-  *Set the Compute Mode to Baremetal (default)
+  * Set the Compute Mode to Baremetal (default)
   
   ```
   contrail_compute_mode: bare_metal
   ```
   
-  *Provide the OS release information of the Containers
+  * Provide the OS release information of the Containers
   
   ```
   os_release: ubuntu16.04
   ```
   
-  *Provide the Release information of Contrail. This should match the image_version tag
+  * Provide the Release information of Contrail. This should match the image_version tag
   
   ```
   contrail_version: 4.0.1.0-32
   ```
   
-  *vRouter Physical interface. This is the interface that will be inherited by vRouter
+  * vRouter Physical interface. This is the interface that will be inherited by vRouter
   
   ```
   vrouter_physical_interface: eth0
   ```
   
-  *Mention the LB IP as the Analytics, AnalyticsDB and Controller IP in global configuration
+  * Mention the LB IP as the Analytics, AnalyticsDB and Controller IP in global configuration
   
   ```
   global_config: { analytics_ip: 10.87.1.57, controller_ip: 10.87.1.57, config_ip: 10.87.1.57 }
   ```
   
-  *Provide the admin credentails and Keystone information
+  * Provide the admin credentails and Keystone information
   
   ```
   keystone_config: {'ip': '50.51.23.14', 'admin_password': 'P0rterple1', 'admin_user': 'admin@cos.net', 'admin_port': '443',     'insecure': 'False', 'identity_uri': 'https://juniper.cos.net/keystone_admin', 'auth_url':               'https://juniper.cos.net:443/keystone/v2.0'}
@@ -167,6 +167,7 @@ Path:  Contrail_Ansible_TP_Integration/contrail-ansible/playbooks/
 ```
 ansible-playbook  -i inventory/my-inventory site.yml -vv
 ```
+* With this the Control_Plane installation is complete. Webui Can be accessed using : http://<LB_IP>:8080
 
 ### Custom Configuration Changes
 
@@ -266,10 +267,10 @@ contrail-compute-setup --self_ip 10.87.1.57 --hypervisor libvirt --cfgm_ip 10.87
 This will provision the vRouter followed by Registration (hostname mismatches may occur if the hostname doesn't match the hostname.domain_name) and will reboot the node (contrail_reboot)
 
 ```
-*--self_ip    #IP of the Compute_Node
-*--cfgm_ip    #IP of LB_COntainer
-*--collectors   #List of all three Analytics_Nodes
-*--control-nodes  #List of all three Controller_Nodes
-*--keystone_ip  #Openstack Kestone_IP
-*--keystone_admin_user  #Exact user name as specified in Openstack
+* --self_ip    #IP of the Compute_Node
+* --cfgm_ip    #IP of LB_COntainer
+* --collectors   #List of all three Analytics_Nodes
+* --control-nodes  #List of all three Controller_Nodes
+* --keystone_ip  #Openstack Kestone_IP
+* --keystone_admin_user  #Exact user name as specified in Openstack
 ```
