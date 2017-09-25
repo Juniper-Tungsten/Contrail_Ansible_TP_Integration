@@ -77,11 +77,7 @@ webui_auth_protocol: http
 # contrail_install_packages_url: "http://10.84.5.120/github-build/mainline/3023/ubuntu-14-04/mitaka/contrail-install-packages_4.0.0.0-3023~mitaka_all.deb"
 # keystone_config: {ip: 192.168.0.23, admin_password: contrail123, auth_protocol: http}
 
-keystone_config: {'ip': '52.52.233.141', 'admin_password': 'R0gKpblZbye761Uq', 'admin_user': 'admin@platform9.net', 'admin_port': '443', 'insecure': 'False', 'identity_uri': 'https://juniper.platform9.net/keystone_admin', 'auth_url': 'https://juniper.platform9.net:443/keystone/v2.0'}
-
-#keystone_config: {'ip': '52.52.233.141', 'admin_password': 'C0ntrail123$', 'admin_user': 'gokulpr@juniper.net', 'admin_port': '443', 'insecure': 'False', 'identity_uri': 'https://juniper.platform9.net/keystone_admin', 'auth_url': 'https://juniper.platform9.net:443/keystone/v2.0'}
-
-#keystone_config: {'ip': '52.52.233.141', 'admin_password': 'R0gKpblZbye761Uq', 'admin_user': 'admin@platform9.net', 'admin_port': '443', 'insecure': 'False', 'identity_uri': 'https://juniper.platform9.net/keystone_admin', 'auth_url': 'https://juniper.platform9.net:443/keystone/v2.0'}
+keystone_config: {'ip': '50.51.23.14', 'admin_password': 'P0rterple1', 'admin_user': 'admin@cos.net', 'admin_port': '443', 'insecure': 'False', 'identity_uri': 'https://juniper.cos.net/keystone_admin', 'auth_url': 'https://juniper.cos.net:443/keystone/v2.0'}
 
 # Link-Local Metadata Service
 # By default server manager will retrieve metadata_proxy_secret from openstack node
