@@ -173,9 +173,11 @@ ansible-playbook  -i inventory/my-inventory site.yml -vv
 
 *Change parameters of vnc_api_lib.ini for contrail-alarm-gen service to be active. Once the installation is complete the contrail-alarm-gen service on the analytics containers will be in inactive state the following are the changes that are needed to activate the service.
 
+In Analytics Container: /etc/contrail/vnc_api_lib.ini
+
 ```
 [global]
-WEB_SERVER = 10.87.1.43
+WEB_SERVER = 10.87.1.57
 WEB_PORT = 8082
 
 BASE_URL = /
@@ -185,10 +187,10 @@ BASE_URL = /
 [auth]
 AUTHN_TYPE = keystone
 AUTHN_PROTOCOL = https
-AUTHN_SERVER = juniper.cosnet.net
+AUTHN_SERVER = juniper.cos8.net
 AUTHN_PORT = 443
-AUTHN_URL = /keystone/v2.0
-AUTHN_TOKEN_URL = https://juniper.cosnet.net/keystone/v2.0/tokens
+AUTHN_URL = /keystone/v2.0/tokens
+AUTHN_TOKEN_URL = https://juniper.cos8.net/keystone/v2.0/tokens
 ;AUTHN_TOKEN_URL = http://127.0.0.1:35357/v2.0/tokens
 ```
 
