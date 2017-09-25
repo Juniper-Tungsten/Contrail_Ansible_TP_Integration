@@ -96,8 +96,7 @@ This is the Ansible Hosts file which defines the nodes role and IP information.
 10.87.1.56
 
 [contrail-compute]
-10.87.1.58
-10.87.1.59
+
 
 [contrail-lb]
 10.87.1.57
@@ -161,7 +160,40 @@ This is the Central configuration file for various contrail related parameters. 
   keystone_config: {'ip': '50.51.23.14', 'admin_password': 'P0rterple1', 'admin_user': 'admin@cos.net', 'admin_port': '443',     'insecure': 'False', 'identity_uri': 'https://juniper.cos.net/keystone_admin', 'auth_url':               'https://juniper.cos.net:443/keystone/v2.0'}
   ```
 
-### Prepare vRouter/Compute Nodes
+### Run Ansible
+
+Path:  Contrail_Ansible_TP_Integration/contrail-ansible/playbooks/
+
+```
+ansible-playbook  -i inventory/my-inventory site.yml -vv
+```
+
+### Custom Configuration Changes
+
+*Change parameters of vnc_api_lib.ini for contrail-alarm-gen service to be active. Once the installation is complete the contrail-alarm-gen service on the analytics containers will be in inactive state the following are the changes that are needed to activate the service.
+
+```
+[global]
+WEB_SERVER = 10.87.1.43
+WEB_PORT = 8082
+
+BASE_URL = /
+;BASE_URL = /tenants/infra ; common-prefix for all URLs
+
+; Authentication settings (optional)
+[auth]
+AUTHN_TYPE = keystone
+AUTHN_PROTOCOL = https
+AUTHN_SERVER = juniper.cosnet.net
+AUTHN_PORT = 443
+AUTHN_URL = /keystone/v2.0
+AUTHN_TOKEN_URL = https://juniper.cosnet.net/keystone/v2.0/tokens
+;AUTHN_TOKEN_URL = http://127.0.0.1:35357/v2.0/tokens
+```
+
+### vRouter Installation
+
+#### Prepare vRouter/Compute Nodes
 
 Get the vRouter packages to all the compute nodes. Run the below snippet as a shell script adding it in a file (example: setup_vrouter.sh | execute: ./setup_vrouter.sh)
 
@@ -221,35 +253,23 @@ yum install contrail-vrouter-common contrail-vrouter contrail-vrouter-init -y;
 
 This will install all required packages on the Compute node required for vRouter installation.
 
+#### Provision and Register the vRouter to the Controller
 
-### Run Ansible
+*Make sure to have proper hostname on the nodes, if using the name.domain_name then the out put of "hostname -s"should be same as the hostname.domain_name
 
-Path:  Contrail_Ansible_TP_Integration/contrail-ansible/playbooks/
-
-```
-ansible-playbook  -i inventory/my-inventory site.yml -vv
-```
-
-### Custom Configuration Changes
-
-*Change parameters of vnc_api_lib.ini for contrail-alarm-gen service to be active. Once the installation is complete the contrail-alarm-gen service on the analytics containers will be in inactive state the following are the changes that are needed to activate the service.
+Use the below utility to provision the vRouter:
 
 ```
-[global]
-WEB_SERVER = 10.87.1.43
-WEB_PORT = 8082
-
-BASE_URL = /
-;BASE_URL = /tenants/infra ; common-prefix for all URLs
-
-; Authentication settings (optional)
-[auth]
-AUTHN_TYPE = keystone
-AUTHN_PROTOCOL = https
-AUTHN_SERVER = juniper.cosnet.net
-AUTHN_PORT = 443
-AUTHN_URL = /keystone/v2.0
-AUTHN_TOKEN_URL = https://juniper.cosnet.net/keystone/v2.0/tokens
-;AUTHN_TOKEN_URL = http://127.0.0.1:35357/v2.0/tokens
+contrail-compute-setup --self_ip 10.87.1.57 --hypervisor libvirt --cfgm_ip 10.87.1.57 --collectors 10.87.1.54 10.87.1.61 10.87.1.56 --control-nodes 10.87.1.54 10.87.1.61 10.87.1.56 --keystone_ip 50.51.23.14  --keystone_auth_protocol https  --keystone_auth_port 443  --keystone_admin_user admin@cos9.net  --keystone_admin_password bye761Uq --keystone_admin_tenant_name admin --register && cd /etc/contrail && ./contrail_reboot
 ```
 
+This will provision the vRouter followed by Registration (hostname mismatches may occur if the hostname doesn't match the hostname.domain_name) and will reboot the node (contrail_reboot)
+
+```
+*--self_ip    #IP of the Compute_Node
+*--cfgm_ip    #IP of LB_COntainer
+*--collectors   #List of all three Analytics_Nodes
+*--control-nodes  #List of all three Controller_Nodes
+*--keystone_ip  #Openstack Kestone_IP
+*--keystone_admin_user  #Exact user name as specified in Openstack
+```
