@@ -121,4 +121,12 @@ This is the Ansible Hosts file which defines the nodes role and IP information.
 ;192.168.0.24
 ```
 
+###### all.yml (Contrail_Ansible_TP_Integration/contrail-ansible/playbooks/inventory/my-inventory/group_vars/all.yml)
+
+This is the Central configuration file for various contrail related parameters. The cloned repo already has a sample file, following are the parametes that are to be changed as required.
+
+
+
+
+
 
